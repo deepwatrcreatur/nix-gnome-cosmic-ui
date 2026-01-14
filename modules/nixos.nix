@@ -8,8 +8,10 @@ let
   cfg = config.services.gnomeCosmicUi;
 
   monitorKey = builtins.toString cfg.monitorIndex;
-  mkJson = value: "'{\"${monitorKey}\":${value}}'";
-  mkJsonString = value: "'{\"${monitorKey}\":\"${value}\"}'";
+  # dash-to-panel stores multi-monitor settings as JSON *strings* (schema type `s`).
+  # So we must write a GVariant string that contains JSON.
+  mkJson = value: "\"'{\\\"${monitorKey}\\\":${value}}'\"";
+  mkJsonString = value: "\"'{\\\"${monitorKey}\\\":\\\"${value}\\\"}'\"";
 
   enabledExtensions =
     (lib.optionals cfg.enableDashToDock [ "dash-to-dock@micxgx.gmail.com" ])
